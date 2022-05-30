@@ -68,9 +68,6 @@ class ConstraintSpecificationProblem():
             self.curr_domains[B].append(b)
 
 
-
-
-
 # Constraint Propagation with Arc Consistency
 
 def check_if_value_removed(csp, Xi, Xj, toBeRemoved):
@@ -84,4 +81,16 @@ def check_if_value_removed(csp, Xi, Xj, toBeRemoved):
     return revised
 
 
-
+def check_arc_consistency(csp, queue=None, toBeRemoved=None):
+    if queue is None:
+        queue = [(Xi, Xk) for Xi in csp.elements for Xk in csp.neighbors[Xi]]
+    csp.make_pruning()
+    while queue:
+        (Xi, Xj) = queue.pop()
+        if check_if_value_removed(csp, Xi, Xj, toBeRemoved):
+            if not csp.curr_domains[Xi]:
+                return False
+            for Xk in csp.neighbors[Xi]:
+                if Xk != Xj:
+                    queue.append((Xk, Xi))
+    return True
