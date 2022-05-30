@@ -19,4 +19,25 @@ class ConstraintSpecificationProblem():
         # Remove var from assignment
         if element in assignment:
             del assignment[element]
+    
+    def numberOfConflicts(self, currentVariable, currentValue, assignment):
+        # Functions on Sequences and Iterables
+
+        def count(seq):
+            # Count the number of items in sequence that are interpreted as true.
+            return sum(bool(x) for x in seq)
+        # Return the number of conflicts var=val has with other elements.
+
+        def checkForConflict(element):
+            return (element in assignment and
+                    not self.constraints(currentVariable, currentValue, element, assignment[element]))
+        return count(checkForConflict(v) for v in self.neighbors[currentVariable])
+
+    def checkIfVariablesAssignedWithConstraintsSatisfied(self, status):
+        # The goal is to assign all variables, with all constraints satisfied
+        assignment = dict(status)
+        return (len(assignment) == len(self.elements)
+                and all(self.numberOfConflicts(elements, assignment[elements], assignment) == 0
+                        for elements in self.elements))
+
 
