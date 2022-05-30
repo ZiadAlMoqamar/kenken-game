@@ -11,4 +11,12 @@ class ConstraintSpecificationProblem():
         self.curr_domains = None
         self.nassigns = 0
 
+    def assignVarsToNewValues(self, currentVar, currentVal, assignment):
+        assignment[currentVar] = currentVal
+        self.nassigns += 1
+
+    def removeVarsAssignment(tself, element, assignment):
+        # Remove var from assignment
+        if element in assignment:
+            del assignment[element]
 
