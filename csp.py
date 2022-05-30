@@ -42,6 +42,19 @@ class ConstraintSpecificationProblem():
 
     # functions for constraint propagation
     def make_pruning(self):
-
         if self.curr_domains is None:
-            self.curr_domains = {v: list(self.domains[v]) for v in self.elements}
+            self.curr_domains = {
+                v: list(self.domains[v]) for v in self.elements}
+
+    def prune(self, element, value, toBeRemoved):
+        # Remove value from domain of element
+        self.curr_domains[element].remove(value)
+
+        if toBeRemoved is not None:
+            toBeRemoved.append((element, value))
+
+
+
+
+
+
