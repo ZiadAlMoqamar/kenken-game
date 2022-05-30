@@ -19,7 +19,7 @@ class ConstraintSpecificationProblem():
         # Remove var from assignment
         if element in assignment:
             del assignment[element]
-    
+
     def numberOfConflicts(self, currentVariable, currentValue, assignment):
         # Functions on Sequences and Iterables
 
@@ -40,4 +40,8 @@ class ConstraintSpecificationProblem():
                 and all(self.numberOfConflicts(elements, assignment[elements], assignment) == 0
                         for elements in self.elements))
 
+    # functions for constraint propagation
+    def make_pruning(self):
 
+        if self.curr_domains is None:
+            self.curr_domains = {v: list(self.domains[v]) for v in self.elements}
