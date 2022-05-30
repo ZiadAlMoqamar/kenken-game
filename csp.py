@@ -53,8 +53,16 @@ class ConstraintSpecificationProblem():
         if toBeRemoved is not None:
             toBeRemoved.append((element, value))
 
+    def suppose(self, element, value):
+        self.make_pruning()
+        toBeRemoved = [(element, a)
+                       for a in self.curr_domains[element] if a != value]
+        self.curr_domains[element] = [value]
+        return toBeRemoved
 
+    def not_removed_values(self, element):
+        return (self.curr_domains or self.domains)[element]
 
-
-
-
+    def undo_removal(self, toBeRemoved):
+        for B, b in toBeRemoved:
+            self.curr_domains[B].append(b)
