@@ -66,3 +66,22 @@ class ConstraintSpecificationProblem():
     def undo_removal(self, toBeRemoved):
         for B, b in toBeRemoved:
             self.curr_domains[B].append(b)
+
+
+
+
+
+# Constraint Propagation with Arc Consistency
+
+def check_if_value_removed(csp, Xi, Xj, toBeRemoved):
+    # Return true if we remove a value
+    revised = False
+    for x in csp.curr_domains[Xi][:]:
+        # If Xi=x conflicts with Xj=y for every possible y, eliminate Xi=x
+        if all(not csp.constraints(Xi, x, Xj, y) for y in csp.curr_domains[Xj]):
+            csp.prune(Xi, x, toBeRemoved)
+            revised = True
+    return revised
+
+
+
