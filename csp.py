@@ -94,3 +94,26 @@ def check_arc_consistency(csp, queue=None, toBeRemoved=None):
                 if Xk != Xj:
                     queue.append((Xk, Xi))
     return True
+
+
+def first(iterable, default=None):
+    # Return the first element of an iterable or the next element of a generator
+    try:
+        return iterable[0]
+    except IndexError:
+        return default
+    except TypeError:
+        return next(iterable, default)
+
+
+def first_unassigned_variable(assignment, csp):
+    return first([var for var in csp.elements if var not in assignment])
+
+
+# Value ordering
+def unordered_domain_values(element, assisment, csp):
+    return csp.not_removed_values(element)
+
+# Inference
+def no_inference(csp, var, value, assignment, toBeRemoved):
+    return True
