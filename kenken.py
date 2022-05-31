@@ -1,5 +1,6 @@
 from functools import reduce
 from random import choice, randint, random, shuffle
+from time import time
 
 from itertools import permutations, product
 import csp
@@ -256,3 +257,15 @@ class Kenken(csp.ConstraintSpecificationProblem):
 
         self.checks += 1
         return A == B or not has_conflict(A, a, B, b)
+
+
+def calculate_benchmark(kenken, algorithm):
+    kenken.checks = kenken.nassigns = 0
+
+    dt = time()
+
+    assignment = algorithm(kenken)
+
+    dt = time() - dt
+
+    return assignment, (kenken.checks, kenken.nassigns, dt)
