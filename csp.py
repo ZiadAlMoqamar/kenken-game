@@ -11,11 +11,9 @@ class ConstraintSpecificationProblem():
         self.curr_domains = None
         self.nassigns = 0
 
-
     def assignVarsToNewValues(self, currentVar, currentVal, assignment):
         assignment[currentVar] = currentVal
         self.nassigns += 1
-
 
     def removeVarsAssignment(tself, element, assignment):
         # Remove var from assignment
@@ -123,7 +121,6 @@ def no_inference(csp, var, value, assignment, toBeRemoved):
     return True
 
 
-
 def forward_checking(csp, element, value, assignment, toBeRemoved):
     csp.make_pruning()
     for B in csp.neighbors[element]:
@@ -140,3 +137,28 @@ def make_arc_consistency(csp, element, value, assignment, toBeRemoved):
     return check_arc_consistency(csp, [(X, element) for X in csp.neighbors[element]], toBeRemoved)
 
 
+def backtracking_search(csp,
+                        select_unassigned_variable=first_unassigned_variable,
+                        order_domain_values=unordered_domain_values,
+                        inference=no_inference):
+
+    def backtrack(assignment):
+        if len(assignment) == len(csp.elements):
+            return assignment
+        var = select_unassigned_variable(assignment, csp)
+        for value in order_domain_values(var, assignment, csp):
+            if 0 == csp.numberOfConflicts(var, value, assignment):
+                csp.assignVarsToNewValues(var, value, assignment)
+                toBeRemoved = csp.suppose(var, value)
+                if inference(csp, var, value, assignment, toBeRemoved):
+                    result = backtrack(assignment)
+                    if result is not None:
+                        return result
+                csp.undo_removal(toBeRemoved)
+        csp.removeVarsAssignment(var, assignment)
+        return None
+
+    result = backtrack({})
+    assert result is None or csp.checkIfVariablesAssignedWithConstraintsSatisfied(
+        result)
+    return result
