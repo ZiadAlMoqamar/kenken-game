@@ -157,3 +157,26 @@ def satisfies(values, operation, target):
         if reduce(operation, p) == target:
             return True
     return False
+
+
+def get_neighbors(cliques):
+
+    neighbors = {}
+
+    for members, _, _ in cliques:
+
+        neighbors[members] = []
+
+    for A, _, _ in cliques:
+
+        for B, _, _ in cliques:
+
+            if A != B and B not in neighbors[A]:
+
+                if has_conflict(A, [-1] * len(A), B, [-1] * len(B)):
+
+                    neighbors[A].append(B)
+
+                    neighbors[B].append(A)
+
+    return neighbors
