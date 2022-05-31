@@ -1,6 +1,8 @@
 from functools import reduce
 from random import choice, randint, random, shuffle
 
+from itertools import permutations, product
+
 # checks if two cells are adjacent
 def is_two_cells_are_adjacent(xy1, xy2):
     x1, y1 = xy1
@@ -102,3 +104,56 @@ def make_new_random_board(board_size):
         cliques[-1] = (tuple(cliques[-1]), operator, int(target))
     # Return the cliques
     return board_size, cliques
+
+
+def get_domains(size, cliques):
+    # Initialize the domains of each variable to contain every product
+    domains = {}
+
+    # Iterate over the cliques
+    for clique in cliques:
+        # Get the members, operator, and target of the clique
+        members, operator, target = clique
+
+        domains[members] = list(
+            product(range(1, size + 1), repeat=len(members)))
+
+        def qualifies(values): return not has_conflict(
+            members, values, members, values) and satisfies(values, select_operation(operator), target)
+
+        domains[members] = list(filter(qualifies, domains[members]))
+
+    return domains
+
+
+def has_conflict(A, a, B, b):
+    # Iterate over all members of A
+    for i in range(len(A)):
+        # Iterate over all members of B
+        for j in range(len(B)):
+            mA = A[i]
+            mB = B[j]
+            ma = a[i]
+            mb = b[j]
+            # If the members are in the same row / column
+            # but are in different columns / rows
+            # and the values of the members are equal
+            # then return true
+            if is_in_same_row_or_column(mA, mB) and ma == mb:
+                return True
+
+    return False
+
+# checks if the given positions are in the same row / column
+
+
+def is_in_same_row_or_column(xy1, xy2):
+    return (xy1[0] == xy2[0]) != (xy1[1] == xy2[1])
+
+
+def satisfies(values, operation, target):
+
+    for p in permutations(values):
+        if reduce(operation, p) == target:
+            return True
+    return False
