@@ -1,6 +1,8 @@
 from functools import reduce
 from random import choice, randint, random, shuffle
 from time import time
+from sys import stderr
+from csv import writer
 
 from itertools import permutations, product
 import csp
@@ -269,3 +271,45 @@ def calculate_benchmark(kenken, algorithm):
     dt = time() - dt
 
     return assignment, (kenken.checks, kenken.nassigns, dt)
+
+
+def gather(iterations, size, out):
+
+    def bt(ken): return csp.backtracking_search(ken)
+
+    def fc(ken): return csp.backtracking_search(
+        ken, inference=csp.forward_checking)
+
+    def mac(ken): return csp.backtracking_search(
+        ken, inference=csp.make_arc_consistency)
+
+    algorithms = {
+        "BT": bt,
+        "FC": fc,
+        "MAC": mac,
+    }
+
+    with open(out, "w+") as file:
+
+        out = writer(file)
+        out.writerow(["Algorithm", "Size",
+                     "Constraint checks count", "Assignments count", "Completion time"])
+
+        for name, algorithm in algorithms.items():
+            checks, assignments, dt = (0, 0, 0)
+
+            for iteration in range(1, iterations + 1):
+                size, cliques = make_new_random_board(size)
+                assignment, data = calculate_benchmark(
+                    Kenken(size, cliques), algorithm)
+                print("algorithm =",  name, "size =", size, "iteration =", iteration,
+                      "result =", "Success" if assignment else "Failure", file=stderr)
+
+                checks += data[0] / iterations
+                assignments += data[1] / iterations
+                dt += data[2] / iterations
+            out.writerow([name, size, checks, assignments, dt])
+
+
+if __name__ == "__main__":
+    gather(iterations=100, size=5, out="kenken.csv")
