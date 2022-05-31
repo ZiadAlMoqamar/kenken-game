@@ -1,4 +1,12 @@
-class ConstraintSpecificationProblem():
+class Problem(object):
+    def __init__(self, initial, goal=None):
+        self.initial = initial
+        self.goal = goal
+
+
+
+
+class ConstraintSpecificationProblem(Problem):
 
     def __init__(self, elements, domains, neighbors, constraints):
         elements = elements or list(domains.keys())
@@ -162,3 +170,6 @@ def backtracking_search(csp,
     assert result is None or csp.checkIfVariablesAssignedWithConstraintsSatisfied(
         result)
     return result
+
+
+
