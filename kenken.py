@@ -2,6 +2,8 @@ from functools import reduce
 from random import choice, randint, random, shuffle
 
 from itertools import permutations, product
+import csp
+
 
 # checks if two cells are adjacent
 def is_two_cells_are_adjacent(xy1, xy2):
@@ -222,3 +224,35 @@ def check_if_valid_kenken_board(board_size, cliques):
     if problematic:
 
         exit(4)
+
+
+class Kenken(csp.ConstraintSpecificationProblem):
+
+    def __init__(self, size, cliques):
+
+        # Validate the input before proceeding.
+        check_if_valid_kenken_board(size, cliques)
+        # Initialize the CSP.
+        variables = [members for members, _, _ in cliques]
+
+        # Initialize the domains of the variables.
+        domains = get_domains(size, cliques)
+        neighbors = get_neighbors(cliques)
+        csp.ConstraintSpecificationProblem.__init__(
+            self, variables, domains, neighbors, self.constraint)
+        self.size = size
+
+        # Used in benchmarking
+        self.checks = 0
+
+        # Used in displaying
+        self.padding = 0
+        self.meta = {}
+        for members, operator, target in cliques:
+            self.meta[members] = (operator, target)
+            self.padding = max(self.padding, len(str(target)))
+
+    def constraint(self, A, a, B, b):
+
+        self.checks += 1
+        return A == B or not has_conflict(A, a, B, b)
