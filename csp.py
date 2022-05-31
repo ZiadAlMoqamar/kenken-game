@@ -11,9 +11,11 @@ class ConstraintSpecificationProblem():
         self.curr_domains = None
         self.nassigns = 0
 
+
     def assignVarsToNewValues(self, currentVar, currentVal, assignment):
         assignment[currentVar] = currentVal
         self.nassigns += 1
+
 
     def removeVarsAssignment(tself, element, assignment):
         # Remove var from assignment
@@ -115,5 +117,26 @@ def unordered_domain_values(element, assisment, csp):
     return csp.not_removed_values(element)
 
 # Inference
+
+
 def no_inference(csp, var, value, assignment, toBeRemoved):
     return True
+
+
+
+def forward_checking(csp, element, value, assignment, toBeRemoved):
+    csp.make_pruning()
+    for B in csp.neighbors[element]:
+        if B not in assignment:
+            for b in csp.curr_domains[B][:]:
+                if not csp.constraints(element, value, B, b):
+                    csp.prune(B, b, toBeRemoved)
+            if not csp.curr_domains[B]:
+                return False
+    return True
+
+
+def make_arc_consistency(csp, element, value, assignment, toBeRemoved):
+    return check_arc_consistency(csp, [(X, element) for X in csp.neighbors[element]], toBeRemoved)
+
+
