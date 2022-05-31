@@ -180,3 +180,45 @@ def get_neighbors(cliques):
                     neighbors[B].append(A)
 
     return neighbors
+
+
+def check_if_valid_kenken_board(board_size, cliques):
+    def outOfBounds(
+        xy): return xy[0] < 1 or xy[0] > board_size or xy[1] < 1 or xy[1] > board_size
+
+    mentioned = set()
+
+    for i in range(len(cliques)):
+
+        members, operator, target = cliques[i]
+
+        cliques[i] = (tuple(set(members)), operator, target)
+
+        members, operator, target = cliques[i]
+
+        if operator not in "+-*/=":
+
+            exit(1)
+
+        problematic = list(filter(outOfBounds, members))
+
+        if problematic:
+
+            exit(2)
+
+        problematic = mentioned.intersection(set(members))
+
+        if problematic:
+
+            exit(3)
+
+        mentioned.update(set(members))
+
+    indexes = range(1, board_size + 1)
+
+    problematic = set([(x, y)
+                      for y in indexes for x in indexes]).difference(mentioned)
+
+    if problematic:
+
+        exit(4)
