@@ -1,0 +1,4 @@
+Algorithm type,Board size,Constraint checks count,Assignments count,Completion time
+Back_Track,5,2006.5900000000004,75.27000000000001,0.01318405628204346
+Forward_Checking,5,633.6900000000002,30.059999999999995,0.0033125662803649906
+Arc_Consistency,5,3355.51,17.2,0.016224846839904786

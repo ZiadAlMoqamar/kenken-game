@@ -235,11 +235,13 @@ class Kenken(csp.ConstraintSpecificationProblem):
 
         # Validate the input before proceeding.
         check_if_valid_kenken_board(size, cliques)
+
         # Initialize the CSP.
         variables = [members for members, _, _ in cliques]
 
         # Initialize the domains of the variables.
         domains = get_domains(size, cliques)
+
         neighbors = get_neighbors(cliques)
         csp.ConstraintSpecificationProblem.__init__(
             self, variables, domains, neighbors, self.constraint)
@@ -251,6 +253,7 @@ class Kenken(csp.ConstraintSpecificationProblem):
         # Used in displaying
         self.padding = 0
         self.meta = {}
+        
         for members, operator, target in cliques:
             self.meta[members] = (operator, target)
             self.padding = max(self.padding, len(str(target)))
@@ -273,43 +276,49 @@ def calculate_benchmark(kenken, algorithm):
     return assignment, (kenken.checks, kenken.nassigns, dt)
 
 
-def gather(iterations, size, out):
+def performance_analysis(noOfIterations, boardSize, outFile):
 
-    def bt(ken): return csp.backtracking_search(ken)
+    def back_track(ken): return csp.backtracking_search(ken)
 
-    def fc(ken): return csp.backtracking_search(
+    def forward_checking(ken): return csp.backtracking_search(
         ken, inference=csp.forward_checking)
 
-    def mac(ken): return csp.backtracking_search(
+    def arc_consistency(ken): return csp.backtracking_search(
         ken, inference=csp.make_arc_consistency)
 
     algorithms = {
-        "BT": bt,
-        "FC": fc,
-        "MAC": mac,
+        "Back_Track": back_track,
+
+        "Forward_Checking": forward_checking,
+
+        "Arc_Consistency": arc_consistency,
     }
 
-    with open(out, "w+") as file:
+    with open(outFile, "w+") as file:
 
-        out = writer(file)
-        out.writerow(["Algorithm", "Size",
+        outFile = writer(file)
+        outFile.writerow(["Algorithm type", "Board size",
                      "Constraint checks count", "Assignments count", "Completion time"])
 
         for name, algorithm in algorithms.items():
             checks, assignments, dt = (0, 0, 0)
 
-            for iteration in range(1, iterations + 1):
-                size, cliques = make_new_random_board(size)
-                assignment, data = calculate_benchmark(
-                    Kenken(size, cliques), algorithm)
-                print("algorithm =",  name, "size =", size, "iteration =", iteration,
-                      "result =", "Success" if assignment else "Failure", file=stderr)
+            for iteration in range(1, noOfIterations + 1):
+                boardSize, cliques = make_new_random_board(boardSize)
 
-                checks += data[0] / iterations
-                assignments += data[1] / iterations
-                dt += data[2] / iterations
-            out.writerow([name, size, checks, assignments, dt])
+                assignment, data = calculate_benchmark(
+                    Kenken(boardSize, cliques), algorithm)
+
+                print("Algorithm is: {}, board_size = {}, No. of iterations = {}, {}".format(
+                    name, boardSize, iteration, "SUCCESS" if assignment else "FAIL"), file=stderr)
+
+                checks += data[0] / noOfIterations
+
+                assignments += data[1] / noOfIterations
+
+                dt += data[2] / noOfIterations
+            outFile.writerow([name, boardSize, checks, assignments, dt])
 
 
 if __name__ == "__main__":
-    gather(iterations=100, size=5, out="kenken.csv")
+    performance_analysis(noOfIterations=100, boardSize=5, outFile="kenken.csv")

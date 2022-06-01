@@ -52,7 +52,8 @@ class ConstraintSpecificationProblem(Problem):
     def make_pruning(self):
         if self.curr_domains is None:
             self.curr_domains = {
-                v: list(self.domains[v]) for v in self.elements}
+                v: list(self.domains[v]) for v in self.elements
+                }
 
     def prune(self, element, value, toBeRemoved):
         # Remove value from domain of element
@@ -63,8 +64,10 @@ class ConstraintSpecificationProblem(Problem):
 
     def suppose(self, element, value):
         self.make_pruning()
+
         toBeRemoved = [(element, a)
                        for a in self.curr_domains[element] if a != value]
+
         self.curr_domains[element] = [value]
         return toBeRemoved
 
@@ -81,25 +84,34 @@ class ConstraintSpecificationProblem(Problem):
 def check_if_value_removed(csp, Xi, Xj, toBeRemoved):
     # Return true if we remove a value
     revised = False
+
     for x in csp.curr_domains[Xi][:]:
+
         # If Xi=x conflicts with Xj=y for every possible y, eliminate Xi=x
         if all(not csp.constraints(Xi, x, Xj, y) for y in csp.curr_domains[Xj]):
+
             csp.prune(Xi, x, toBeRemoved)
             revised = True
+
     return revised
 
 
 def check_arc_consistency(csp, queue=None, toBeRemoved=None):
     if queue is None:
         queue = [(Xi, Xk) for Xi in csp.elements for Xk in csp.neighbors[Xi]]
+
     csp.make_pruning()
+
     while queue:
         (Xi, Xj) = queue.pop()
+
         if check_if_value_removed(csp, Xi, Xj, toBeRemoved):
             if not csp.curr_domains[Xi]:
+
                 return False
             for Xk in csp.neighbors[Xi]:
                 if Xk != Xj:
+                    
                     queue.append((Xk, Xi))
     return True
 
