@@ -114,3 +114,86 @@ def draw_puzzle_lines(screen,size):
         pygame.draw.line(screen, (0, 0, 0), (start_x + (cell_size * i), start_y), (start_x + (cell_size * i), end_y))
         pygame.draw.line(screen, (0, 0, 0), (start_x, start_y + (cell_size * i)), (end_x, start_y + (cell_size * i)))
     pygame.display.update()
+
+# Kenken game round
+class kenken_round():
+    def __init__(self, size):
+        # Integration code
+        self.size, self.cliques = make_new_random_board(size)
+        start_x = (width - (cell_size * size)) / 2
+        start_y = (width - (cell_size * size)) / 2
+        self.starting_coordinate = (start_x, start_y)
+
+
+    # Draw kenken round
+    def draw_kenken_round(self):
+        pygame.init()
+        # init pygame font
+        pygame.font.init()
+        font = pygame.font.SysFont("Grobold", 20)
+        self.screen = pygame.display.set_mode((width, width))
+        pygame.display.set_caption('Kenken game')
+        self.screen.fill(background_color)
+        # Draw the grid lines and the borders of the board of size 'size' centered in the screen
+        draw_puzzle_lines(self.screen, self.size)
+
+
+        # Draw the empty puzzle board
+        draw_empty_puzzle_board(self.cliques, self.starting_coordinate, self.screen,font)
+        
+        quit = False
+        while not quit:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    quit = True
+                    pygame.display.quit()
+
+    
+    # Drawing board answer integration function
+    def draw_board_answer_integration(self,entered_inference):
+        pygame.init()
+        pygame.font.init()
+        font = pygame.font.SysFont("Grobold", 20)
+        screen = pygame.display.set_mode((width, width))
+        pygame.display.set_caption('Kenken game')
+        screen.fill(background_color)
+        
+        # Draw the cage's answer
+        def draw_board_answer(self,board_answer,starting_coordinate,font):
+            # Access the cage's answer dictionary and write the answer for each cell in the cage in the center of the cell
+            for cage_cells, answer in board_answer.items():
+                for i,cell in enumerate(cage_cells):
+                    x = cell[0]
+                    y = cell[1]
+                    # Write the answer in the center of the cell
+                    text = font.render(str(answer[i]), True, (0, 0, 0))
+                    text_rect = text.get_rect()
+                    text_rect.center = (starting_coordinate[0] + (cell_size * ((x-1)+0.5)), starting_coordinate[1] + (cell_size * ((y-1)+0.5)))
+                    screen.blit(text, text_rect)
+                    screen.blit(text, text_rect)
+            pygame.display.update()
+        # board_answer={((1, 1), (2, 1), (2, 2)): [12, 12, 12], ((3, 1), (3, 2), (3, 3)): [6, 6, 6], ((1, 2),): [1], ((1, 3),): [3], ((2, 3),): [1]}
+
+        draw_puzzle_lines(screen,self.size)
+        draw_empty_puzzle_board(self.cliques, self.starting_coordinate, screen, font)
+        
+        ken = Kenken(self.size, copy.deepcopy(self.cliques))
+        # calculate the time taken to solve the puzzle
+        start_time = time()
+        assignment = csp.backtracking_search(ken, inference=entered_inference)
+        end_time = time() 
+
+        # show the time taken to solve the puzzle in seconds
+        print("Time taken to solve the puzzle: ", end_time - start_time)
+        draw_board_answer(self,assignment,starting_coordinate=self.starting_coordinate,font=font)
+        print('solve using' + str(entered_inference))
+        pygame.display.update()
+        print('updated')
+        quit = False
+        while not quit:
+            pygame.init()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    quit = True
+                    pygame.display.quit()
+                    sys.exit()
