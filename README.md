@@ -45,7 +45,7 @@ python3 kenken.py
 
 ![performance analysis](https://github.com/ZiadAlMoqamar/kenken-game/blob/main/demo/performance_analysis.gif?raw=true)
 
-# Contributers:
+# Contributors:
 
 - Ziad Mostafa Abd El-Aziz Mostafa 1700572
 - Abdelrahman Hany Gamal Bakr 1700773
