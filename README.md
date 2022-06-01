@@ -2,7 +2,7 @@
 
 Kenken is a constraint satisification problem (CSP). The project's goal is to solve this puzzle for a user input size for the game. the program generates a valid random game, then the user chooses the algorithm to solve this puzzle automatically, also you can make analysis between the different algorithms according to average time, average assignments, and average constraints checks.
 
-![]()
+![preview of the project](https://github.com/ZiadAlMoqamar/kenken-game/blob/main/demo/about.png?raw=true)
 
 # Getting Started
 
@@ -28,11 +28,11 @@ open terminal inside repo folder and run
 python3 ui.py
 ```
 
-![]()
+![how to run ui](https://github.com/ZiadAlMoqamar/kenken-game/blob/main/demo/how_to_run_ui.gif?raw=true)
 
 Generate a random puzzle of any size and then select algorithm to solve the puzzle
 
-![]()
+![how to generate and solve kenken puzzle](https://github.com/ZiadAlMoqamar/kenken-game/blob/main/demo/howtogenerateandsolve.gif?raw=true)
 
 ## Performance analysis
 
@@ -42,7 +42,7 @@ To generate a csv file with performance analysis
 python3 kenken.py
 ```
 
-![]()
+![performance analysis](https://github.com/ZiadAlMoqamar/kenken-game/blob/main/demo/performance_analysis.gif?raw=true)
 
 # Contributers:
 
