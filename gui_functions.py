@@ -12,40 +12,29 @@ background_color = (255, 255, 255)
 cage_hint_margin = 5
 
 # function to check if the coordinate in the cage_cells forms a square through distance square formula
-# This function returns true if (p1, p2, p3, p4)
-# form a square, otherwise false
-def distSq(p, q):
-    return (p[0] - q[0]) * (p[0] - q[0]) +(p[1] - q[1]) * (p[1] - q[1])
+def euclidean_distance(p, q):
+    return ((p[0] - q[0]) **2)  + ((p[1] - q[1])**2)
 
 def check_square(cage_cells):
     p1= cage_cells[0]
     p2= cage_cells[1]
     p3= cage_cells[2]
     p4= cage_cells[3]
-    d2 = distSq(p1, p2) # from p1 to p2
-    d3 = distSq(p1, p3) # from p1 to p3
-    d4 = distSq(p1, p4) # from p1 to p4
+    d2 = euclidean_distance(p1, p2)
+    d3 = euclidean_distance(p1, p3) 
+    d4 = euclidean_distance(p1, p4) 
 
     if d2 == 0 or d3 == 0 or d4 == 0:   
         return False
-
-    # If lengths if (p1, p2) and (p1, p3) are same, then
-    # following conditions must be met to form a square.
-    # 1) Square of length of (p1, p4) is same as twice
-    # the square of (p1, p2)
-    # 2) Square of length of (p2, p3) is same
-    # as twice the square of (p2, p4)
-
     if d2 == d3 and 2 * d2 == d4 and \
-                    2 * distSq(p2, p4) == distSq(p2, p3):
+                    2 * euclidean_distance(p2, p4) == euclidean_distance(p2, p3):
         return True
-
     if d3 == d4 and 2 * d3 == d2 and \
-                    2 * distSq(p3, p2) == distSq(p3, p4):
+                    2 * euclidean_distance(p3, p2) == euclidean_distance(p3, p4):
         return True
 
     if d2 == d4 and 2 * d2 == d3 and \
-                    2 * distSq(p2, p3) == distSq(p2, p4):
+                    2 * euclidean_distance(p2, p3) == euclidean_distance(p2, p4):
         return True
 
     return False
