@@ -18,10 +18,8 @@ global kenkenObj
 kenkenObj = kenken_round(1)
 
 class Ui_MainWindow(object):
-
+    
     def setupUi(self, MainWindow):
-        # intialize the kenken_round object when the user clicks the generate board button
-        #self.kenkenObj : kenken_round
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(817, 590)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -30,28 +28,22 @@ class Ui_MainWindow(object):
         self.gridLayout_3.setObjectName("gridLayout_3")
         self.mainGridLayout = QtWidgets.QGridLayout()
         self.mainGridLayout.setObjectName("mainGridLayout")
-        self.chooseAlgoHorizontalLayout = QtWidgets.QHBoxLayout()
-        self.chooseAlgoHorizontalLayout.setObjectName("chooseAlgoHorizontalLayout")
-        self.chooseAlgoLabel = QtWidgets.QLabel(self.centralwidget)
-        self.chooseAlgoLabel.setObjectName("chooseAlgoLabel")
-        self.chooseAlgoHorizontalLayout.addWidget(self.chooseAlgoLabel)
-        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
-        self.chooseAlgoHorizontalLayout.addItem(spacerItem)
-        self.backtrackingRadioButton = QtWidgets.QRadioButton(self.centralwidget)
-        self.backtrackingRadioButton.setChecked(True)
-        self.backtrackingRadioButton.setObjectName("backtrackingRadioButton")
-        self.chooseAlgoHorizontalLayout.addWidget(self.backtrackingRadioButton)
-        self.forwaredCheckingRadioButton = QtWidgets.QRadioButton(self.centralwidget)
-        self.forwaredCheckingRadioButton.setObjectName("forwaredCheckingRadioButton")
-        self.chooseAlgoHorizontalLayout.addWidget(self.forwaredCheckingRadioButton)
-        self.arcConsistencyRadioButton = QtWidgets.QRadioButton(self.centralwidget)
-        self.arcConsistencyRadioButton.setObjectName("arcConsistencyRadioButton")
-        self.chooseAlgoHorizontalLayout.addWidget(self.arcConsistencyRadioButton)
-        self.mainGridLayout.addLayout(self.chooseAlgoHorizontalLayout, 5, 0, 1, 1)
-        spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
-        self.mainGridLayout.addItem(spacerItem1, 6, 0, 1, 1)
-        spacerItem2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
-        self.mainGridLayout.addItem(spacerItem2, 3, 0, 1, 1)
+        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
+        self.mainGridLayout.addItem(spacerItem, 3, 0, 1, 1)
+        self.performanceAnalysisHorizontalLayout = QtWidgets.QHBoxLayout()
+        self.performanceAnalysisHorizontalLayout.setObjectName("performanceAnalysisHorizontalLayout")
+        self.enterNumberOfIterationsLabel = QtWidgets.QLabel(self.centralwidget)
+        self.enterNumberOfIterationsLabel.setObjectName("enterNumberOfIterationsLabel")
+        self.performanceAnalysisHorizontalLayout.addWidget(self.enterNumberOfIterationsLabel)
+        self.numberOfIterationsLineEdit = QtWidgets.QLineEdit(self.centralwidget)
+        self.numberOfIterationsLineEdit.setObjectName("numberOfIterationsLineEdit")
+        self.performanceAnalysisHorizontalLayout.addWidget(self.numberOfIterationsLineEdit)
+        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.performanceAnalysisHorizontalLayout.addItem(spacerItem1)
+        self.mainGridLayout.addLayout(self.performanceAnalysisHorizontalLayout, 9, 0, 1, 1)
+        self.runPerformanceAnalysisPushButton = QtWidgets.QPushButton(self.centralwidget)
+        self.runPerformanceAnalysisPushButton.setObjectName("runPerformanceAnalysisPushButton")
+        self.mainGridLayout.addWidget(self.runPerformanceAnalysisPushButton, 10, 0, 1, 1)
         self.solvePuzzlePushButton = QtWidgets.QPushButton(self.centralwidget)
         self.solvePuzzlePushButton.setObjectName("solvePuzzlePushButton")
 
@@ -61,15 +53,11 @@ class Ui_MainWindow(object):
         # The user can only click the solve puzzle button if the board is generated
         self.solvePuzzlePushButton.setEnabled(False)
 
-
         self.mainGridLayout.addWidget(self.solvePuzzlePushButton, 7, 0, 1, 1)
+        spacerItem2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
+        self.mainGridLayout.addItem(spacerItem2, 8, 0, 1, 1)
         spacerItem3 = QtWidgets.QSpacerItem(20, 41, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Ignored)
         self.mainGridLayout.addItem(spacerItem3, 1, 0, 1, 1)
-        self.generateboardPushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.generateboardPushButton.setObjectName("generateboardPushButton")
-
-        self.generateboardPushButton.clicked.connect(self.generateBoard)
-        self.mainGridLayout.addWidget(self.generateboardPushButton, 2, 0, 1, 1)
         self.boardSizeHorizontalLayout = QtWidgets.QHBoxLayout()
         self.boardSizeHorizontalLayout.setObjectName("boardSizeHorizontalLayout")
         self.enterBoardSizeLabel = QtWidgets.QLabel(self.centralwidget)
@@ -85,8 +73,32 @@ class Ui_MainWindow(object):
         spacerItem4 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.boardSizeHorizontalLayout.addItem(spacerItem4)
         self.mainGridLayout.addLayout(self.boardSizeHorizontalLayout, 0, 0, 1, 1)
-        spacerItem5 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
-        self.mainGridLayout.addItem(spacerItem5, 8, 0, 1, 1)
+        spacerItem5 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
+        self.mainGridLayout.addItem(spacerItem5, 6, 0, 1, 1)
+        self.generateboardPushButton = QtWidgets.QPushButton(self.centralwidget)
+        self.generateboardPushButton.setObjectName("generateboardPushButton")
+
+        # When the user clicks the generate board button, call the generateBoard function
+        self.generateboardPushButton.clicked.connect(self.generateBoard)
+        self.mainGridLayout.addWidget(self.generateboardPushButton, 2, 0, 1, 1)
+        self.chooseAlgoHorizontalLayout = QtWidgets.QHBoxLayout()
+        self.chooseAlgoHorizontalLayout.setObjectName("chooseAlgoHorizontalLayout")
+        self.chooseAlgoLabel = QtWidgets.QLabel(self.centralwidget)
+        self.chooseAlgoLabel.setObjectName("chooseAlgoLabel")
+        self.chooseAlgoHorizontalLayout.addWidget(self.chooseAlgoLabel)
+        spacerItem6 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
+        self.chooseAlgoHorizontalLayout.addItem(spacerItem6)
+        self.backtrackingRadioButton = QtWidgets.QRadioButton(self.centralwidget)
+        self.backtrackingRadioButton.setChecked(True)
+        self.backtrackingRadioButton.setObjectName("backtrackingRadioButton")
+        self.chooseAlgoHorizontalLayout.addWidget(self.backtrackingRadioButton)
+        self.forwaredCheckingRadioButton = QtWidgets.QRadioButton(self.centralwidget)
+        self.forwaredCheckingRadioButton.setObjectName("forwaredCheckingRadioButton")
+        self.chooseAlgoHorizontalLayout.addWidget(self.forwaredCheckingRadioButton)
+        self.arcConsistencyRadioButton = QtWidgets.QRadioButton(self.centralwidget)
+        self.arcConsistencyRadioButton.setObjectName("arcConsistencyRadioButton")
+        self.chooseAlgoHorizontalLayout.addWidget(self.arcConsistencyRadioButton)
+        self.mainGridLayout.addLayout(self.chooseAlgoHorizontalLayout, 5, 0, 1, 1)
         self.gridLayout_3.addLayout(self.mainGridLayout, 0, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
@@ -102,14 +114,16 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Kenken game"))
+        self.enterNumberOfIterationsLabel.setText(_translate("MainWindow", "Enter number of iterations for performance analysis (eg. 10): "))
+        self.runPerformanceAnalysisPushButton.setText(_translate("MainWindow", "Run performance analysis"))
+        self.solvePuzzlePushButton.setText(_translate("MainWindow", "Solve the puzzle"))
+        self.enterBoardSizeLabel.setText(_translate("MainWindow", "Enter board size (eg. 3): "))
+        self.generateboardPushButton.setText(_translate("MainWindow", "Generate random board"))
         self.chooseAlgoLabel.setText(_translate("MainWindow", "Choose the algorithm that will solve the puzzle:"))
         self.backtrackingRadioButton.setText(_translate("MainWindow", "BackTracking"))
         self.forwaredCheckingRadioButton.setText(_translate("MainWindow", "Forwared checking"))
         self.arcConsistencyRadioButton.setText(_translate("MainWindow", "Arc Consistency"))
-        self.solvePuzzlePushButton.setText(_translate("MainWindow", "Solve the puzzle"))
-        self.generateboardPushButton.setText(_translate("MainWindow", "Generate random board"))
-        self.enterBoardSizeLabel.setText(_translate("MainWindow", "Enter board size (eg. 3): "))
 
     # Show an error message to the user
     # The message is passed as a parameter
@@ -119,7 +133,6 @@ class Ui_MainWindow(object):
         msg.setText(message)
         msg.setWindowTitle("Error")
         msg.exec_()    
-
 
     # Get the board size from the user
     # If the user entered a number, set the board size to that number
