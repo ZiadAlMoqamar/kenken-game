@@ -37,11 +37,7 @@ Generate a random puzzle of any size and then select algorithm to solve the puzz
 ## Performance analysis
 
 To generate a csv file with performance analysis
-Determine the number of random puzzle iterations on each algorithm in iterations parameter for performance_analysis function in kenken.py file.
-
-```bash
-python3 kenken.py
-```
+Determine the number of random puzzle iterations on each algorithm.
 
 ![performance analysis](https://github.com/ZiadAlMoqamar/kenken-game/blob/main/demo/performance_analysis.gif?raw=true)
 
