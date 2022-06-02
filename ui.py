@@ -38,7 +38,8 @@ class Ui_MainWindow(object):
         self.numberOfIterationsLineEdit = QtWidgets.QLineEdit(self.centralwidget)
         self.numberOfIterationsLineEdit.setObjectName("numberOfIterationsLineEdit")
 
-
+        # Run getNumberOfIterations() when the user presses enter in the number of iterations line edit
+        self.numberOfIterationsLineEdit.returnPressed.connect(self.getNumberOfIterations)
         self.performanceAnalysisHorizontalLayout.addWidget(self.numberOfIterationsLineEdit)
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.performanceAnalysisHorizontalLayout.addItem(spacerItem1)
@@ -74,6 +75,7 @@ class Ui_MainWindow(object):
 
         # if textline is updated, disable the solve and performance analysis buttons
         self.boardSizeLineEdit.textChanged.connect(self.disableButtons)
+        # Run getBoardSize() when the user presses enter in the board size line edit
         self.boardSizeLineEdit.returnPressed.connect(self.getBoardSize)
         self.boardSizeHorizontalLayout.addWidget(self.boardSizeLineEdit)
         spacerItem4 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
