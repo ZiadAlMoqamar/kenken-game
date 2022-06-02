@@ -297,7 +297,7 @@ def performance_analysis(noOfIterations, boardSize, outFile):
     with open(outFile, "w+") as file:
 
         outFile = writer(file)
-        outFile.writerow(["Algorithm type", "Board size",
+        outFile.writerow(["Algorithm type", "Board size", "Number of iterations",
                      "Constraint checks count", "Assignments count", "Completion time"])
 
         for name, algorithm in algorithms.items():
@@ -317,8 +317,9 @@ def performance_analysis(noOfIterations, boardSize, outFile):
                 assignments += data[1] / noOfIterations
 
                 dt += data[2] / noOfIterations
-            outFile.writerow([name, boardSize, checks, assignments, dt])
+            outFile.writerow([name, boardSize, noOfIterations, checks, assignments, dt])
+    
 
 
-if __name__ == "__main__":
-    performance_analysis(noOfIterations=100, boardSize=5, outFile="kenken.csv")
+#if __name__ == "__main__":
+    #performance_analysis(noOfIterations=100, boardSize=5, outFile="kenken.csv")

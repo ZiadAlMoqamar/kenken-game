@@ -10,7 +10,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox
-
+import os
 from gui_functions import *
 
 # global kenken_round instance to be used in the whole program
@@ -37,12 +37,18 @@ class Ui_MainWindow(object):
         self.performanceAnalysisHorizontalLayout.addWidget(self.enterNumberOfIterationsLabel)
         self.numberOfIterationsLineEdit = QtWidgets.QLineEdit(self.centralwidget)
         self.numberOfIterationsLineEdit.setObjectName("numberOfIterationsLineEdit")
+
+
         self.performanceAnalysisHorizontalLayout.addWidget(self.numberOfIterationsLineEdit)
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.performanceAnalysisHorizontalLayout.addItem(spacerItem1)
         self.mainGridLayout.addLayout(self.performanceAnalysisHorizontalLayout, 9, 0, 1, 1)
         self.runPerformanceAnalysisPushButton = QtWidgets.QPushButton(self.centralwidget)
         self.runPerformanceAnalysisPushButton.setObjectName("runPerformanceAnalysisPushButton")
+
+        # When the user clicks the run performance analysis button, run the performance analysis function
+        self.runPerformanceAnalysisPushButton.clicked.connect(self.runPerformanceAnalysis)
+        
         self.mainGridLayout.addWidget(self.runPerformanceAnalysisPushButton, 10, 0, 1, 1)
         self.solvePuzzlePushButton = QtWidgets.QPushButton(self.centralwidget)
         self.solvePuzzlePushButton.setObjectName("solvePuzzlePushButton")
@@ -66,8 +72,8 @@ class Ui_MainWindow(object):
         self.boardSizeLineEdit = QtWidgets.QLineEdit(self.centralwidget)
         self.boardSizeLineEdit.setObjectName("boardSizeLineEdit")
 
-        # if textline is updated, disable the solve button
-        self.boardSizeLineEdit.textChanged.connect(self.disableSolveButton)
+        # if textline is updated, disable the solve and performance analysis buttons
+        self.boardSizeLineEdit.textChanged.connect(self.disableButtons)
         self.boardSizeLineEdit.returnPressed.connect(self.getBoardSize)
         self.boardSizeHorizontalLayout.addWidget(self.boardSizeLineEdit)
         spacerItem4 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -134,6 +140,15 @@ class Ui_MainWindow(object):
         msg.setWindowTitle("Error")
         msg.exec_()    
 
+    # Show a success message to the user
+    # The message is passed as a parameter
+    def successMessage(self, message):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Information)
+        msg.setText(message)
+        msg.setWindowTitle("Success")
+        msg.exec_()
+
     # Get the board size from the user
     # If the user entered a number, set the board size to that number
     # If the user entered a string, show an error message that the user must enter a number
@@ -148,11 +163,27 @@ class Ui_MainWindow(object):
             else:
                 self.errorMessage("The board size must be at least 1")
         except ValueError:
-            self.errorMessage("You must enter a number")
+            self.errorMessage("You must enter a number for the board size")
         except TypeError:
-            self.errorMessage("You must enter a number")
+            self.errorMessage("You must enter a number for the board size")
 
-        
+    # Get the number of iterations from the user
+    # If the user entered a number, set the number of iterations to that number
+    # If the user entered a string, show an error message that the user must enter a number
+    # If the user entered nothing, show an error message that the user must enter a number
+    # If the user entered a number that is not an integer, show an error message that the user must enter an integer
+    # If the user entered a number that is less than 1, show an error message that the number of iterations must be at least 1
+    def getNumberOfIterations(self):
+        try:
+            numberOfIterations = int(self.numberOfIterationsLineEdit.text())
+            if numberOfIterations > 0:
+                return numberOfIterations
+            else:
+                self.errorMessage("The number of iterations must be at least 1")
+        except ValueError:
+            self.errorMessage("You must enter a number in the number of iterations field")
+        except TypeError:
+            self.errorMessage("You must enter a number in the number of iterations field")   
 
     # Get the board size from the user and save it to the boardSize variable
     # Then, generate a random board with the board size that the user entered using the play_kenken_round function from the gui file
@@ -179,10 +210,23 @@ class Ui_MainWindow(object):
             kenkenObj.draw_board_answer_integration(entered_inference=csp.make_arc_consistency)
 
 
-    # Disable the solvePuzzlePushButton
-    def disableSolveButton(self):
+    # Disable the solvePuzzlePushButton and runPerformanceAnalysisPushButton when the user enters a number in the boardSizeLineEdit
+    def disableButtons(self):
         self.solvePuzzlePushButton.setEnabled(False)
 
+
+    # Implement runPerformanceAnalysis function to first get the board size from the user using the getBoardSize function and get the number of iterations from the user using getNumberOfIterations function then run the performance analysis using the performance_analysis function from the kenken file
+    def runPerformanceAnalysis(self):
+        boardSize = self.getBoardSize()
+        numberOfIterations = self.getNumberOfIterations()
+        if boardSize is not None and numberOfIterations is not None:
+            # Try to run the performance analysis and if it fails, show an error message
+            try:
+                performance_analysis(noOfIterations=numberOfIterations, boardSize=boardSize, outFile= "performance analysis.csv") 
+                self.successMessage("Performance analysis has finished, the results are saved in performance analysis.csv")
+                os.startfile("performance analysis.csv")
+            except:
+                self.errorMessage("Please close the file performance analysis.csv if it is open")
 
 if __name__ == "__main__":
     import sys
